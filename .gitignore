@@ -46,9 +46,14 @@ local-*
 *.log
 dev.log
 dev.out.log
-test
-prompt
+testpt
 
 server.log
 # Skills directory
 /skills/
+
+
+node_modules/
+dist/
+build/
+.env
