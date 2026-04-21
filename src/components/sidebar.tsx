@@ -21,9 +21,6 @@ import {
   X,
   User,
   ChevronRight,
-  Flame,
-  Star,
-  Sparkles,
 } from "lucide-react"
 import { useAppStore, type PageId } from "@/lib/store"
 import { cn } from "@/lib/utils"
@@ -53,7 +50,10 @@ export function Sidebar() {
   const { currentPage, setCurrentPage, sidebarOpen, setSidebarOpen, userName, userRole } = useAppStore()
   const { data: session } = useSession()
 
-  const navItems = userRole === "ADMIN" ? [...mainNavItems, ...toolsNavItems, ...adminNavItems] : [...mainNavItems, ...toolsNavItems]
+  const navItems =
+    userRole === "ADMIN"
+      ? [...mainNavItems, ...toolsNavItems, ...adminNavItems]
+      : [...mainNavItems, ...toolsNavItems]
 
   return (
     <>
@@ -79,43 +79,29 @@ export function Sidebar() {
         animate={{ x: sidebarOpen ? 0 : -320 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
         className={cn(
-          "fixed top-0 left-0 h-full z-50 w-[280px] gradient-sidebar border-r border-[rgba(148,163,184,0.08)]",
-          "flex flex-col overflow-hidden"
+          "fixed top-0 left-0 h-screen z-50 w-[280px]",
+          "gradient-sidebar border-r border-[rgba(148,163,184,0.08)]",
+          "flex flex-col"
         )}
       >
-        {/* Logo section */}
+        {/* Logo */}
         <div className="p-6 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 flex items-center justify-center">
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 opacity-80 blur-[2px]" />
-              <div className="relative rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 w-10 h-10 flex items-center justify-center">
-                <span className="text-white font-bold text-lg">A</span>
-              </div>
-            </div>
-            <div>
-              <h1 className="font-bold text-lg neon-text">Mr.ADHD</h1>
-              <p className="text-xs text-muted-foreground">Study Tracker</p>
-            </div>
-          </div>
+          <h1 className="font-bold text-lg neon-text">Mr.ADHD</h1>
+          <p className="text-xs text-muted-foreground">Study Tracker</p>
         </div>
 
-        {/* Nav sections */}
+        {/* Scrollable Navigation */}
         <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-6">
-          {/* Main Nav */}
+          {/* Main */}
           <div>
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-3 mb-2">
-              Main
-            </p>
-            <nav className="space-y-0.5">
+            <p className="text-xs text-muted-foreground px-3 mb-2">Main</p>
+            <nav className="space-y-1">
               {mainNavItems.map((item) => (
                 <NavButton
                   key={item.id}
                   item={item}
                   isActive={currentPage === item.id}
-                  onClick={() => {
-                    setCurrentPage(item.id)
-                    if (window.innerWidth < 1024) setSidebarOpen(false)
-                  }}
+                  onClick={() => setCurrentPage(item.id)}
                 />
               ))}
             </nav>
@@ -123,19 +109,14 @@ export function Sidebar() {
 
           {/* Tools */}
           <div>
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-3 mb-2">
-              Tools
-            </p>
-            <nav className="space-y-0.5">
+            <p className="text-xs text-muted-foreground px-3 mb-2">Tools</p>
+            <nav className="space-y-1">
               {toolsNavItems.map((item) => (
                 <NavButton
                   key={item.id}
                   item={item}
                   isActive={currentPage === item.id}
-                  onClick={() => {
-                    setCurrentPage(item.id)
-                    if (window.innerWidth < 1024) setSidebarOpen(false)
-                  }}
+                  onClick={() => setCurrentPage(item.id)}
                 />
               ))}
             </nav>
@@ -144,19 +125,14 @@ export function Sidebar() {
           {/* Admin */}
           {userRole === "ADMIN" && (
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-3 mb-2">
-                Admin
-              </p>
-              <nav className="space-y-0.5">
+              <p className="text-xs text-muted-foreground px-3 mb-2">Admin</p>
+              <nav className="space-y-1">
                 {adminNavItems.map((item) => (
                   <NavButton
                     key={item.id}
                     item={item}
                     isActive={currentPage === item.id}
-                    onClick={() => {
-                      setCurrentPage(item.id)
-                      if (window.innerWidth < 1024) setSidebarOpen(false)
-                    }}
+                    onClick={() => setCurrentPage(item.id)}
                   />
                 ))}
               </nav>
@@ -164,21 +140,17 @@ export function Sidebar() {
           )}
         </div>
 
-        {/* User Profile */}
+        {/* User */}
         <div className="p-4 border-t border-[rgba(148,163,184,0.08)]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center">
-              <User className="h-4 w-4 text-white" />
+            <User className="h-4 w-4" />
+            <div>
+              <p>{userName || session?.user?.name || "Student"}</p>
+              <p className="text-xs text-muted-foreground">
+                {userRole === "ADMIN" ? "Admin" : "Student"}
+              </p>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{userName || session?.user?.name || "Student"}</p>
-              <p className="text-xs text-muted-foreground">{userRole === "ADMIN" ? "Admin" : "Student"}</p>
-            </div>
-            <button
-              onClick={() => signOut()}
-              className="p-1.5 rounded-lg hover:bg-white/5 transition-colors text-muted-foreground hover:text-foreground"
-              title="Sign out"
-            >
+            <button onClick={() => signOut()}>
               <LogOut className="h-4 w-4" />
             </button>
           </div>
@@ -188,28 +160,19 @@ export function Sidebar() {
   )
 }
 
-function NavButton({
-  item,
-  isActive,
-  onClick,
-}: {
-  item: { id: PageId; label: string; icon: React.ReactNode }
-  isActive: boolean
-  onClick: () => void
-}) {
+function NavButton({ item, isActive, onClick }: any) {
   return (
     <button
       onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
+        "w-full flex items-center gap-3 px-3 py-2 rounded-lg",
         isActive
-          ? "bg-gradient-to-r from-purple-500/15 to-pink-500/10 text-purple-300 neon-glow"
-          : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+          ? "bg-purple-500/20 text-purple-300"
+          : "text-muted-foreground hover:bg-white/5"
       )}
     >
-      <span className={cn(isActive && "text-purple-400")}>{item.icon}</span>
-      <span>{item.label}</span>
-      {isActive && <ChevronRight className="h-4 w-4 ml-auto text-purple-400" />}
+      {item.icon}
+      {item.label}
     </button>
   )
 }
